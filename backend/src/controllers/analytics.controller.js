@@ -19,7 +19,13 @@ exports.getSummary = async (req, res) => {
     const uniqueUsersArray = await Analytics.distinct("ip", { url: id });
     const uniqueUsers = uniqueUsersArray.length;
 
-    return success(res, { totalClicks, uniqueUsers });
+    return success(res, {
+      totalClicks,
+      uniqueUsers,
+      shortId: url.customAlias || url.shortId,
+      originalUrl: url.originalUrl,
+      createdAt: url.createdAt
+    });
   } catch (err) {
     return error(res, err.message, 500);
   }
@@ -41,10 +47,10 @@ exports.getDailyChart = async (req, res) => {
         }
       },
       { $sort: { _id: 1 } },
-      { $project: { _id: 0, date: "$_id", count: "$clicks" } } // Transform to frontend format
+      { $project: { _id: 0, date: "$_id", clicks: 1 } }
     ]);
 
-    return success(res, chart);
+    return success(res, { chartData: chart });
   } catch (err) {
     return error(res, err.message, 500);
   }
@@ -58,29 +64,34 @@ exports.getBreakdown = async (req, res) => {
     const url = await validateUrlOwnership(req, id);
     if (!url) return error(res, "URL not found or unauthorized", 404);
 
-    const breakdown = {};
-
-    const formatData = (data) => data.map(item => ({ name: item._id || 'Unknown', value: item.count }));
+    const formatData = (data) => {
+      const result = {};
+      data.forEach(item => {
+        result[item._id || 'Unknown'] = item.count;
+      });
+      return result;
+    };
 
     const deviceData = await Analytics.aggregate([
       { $match: { url: url._id } },
       { $group: { _id: "$device", count: { $sum: 1 } } }
     ]);
-    breakdown.byDevice = formatData(deviceData);
 
     const countryData = await Analytics.aggregate([
       { $match: { url: url._id } },
       { $group: { _id: "$country", count: { $sum: 1 } } }
     ]);
-    breakdown.byCountry = formatData(countryData);
 
     const browserData = await Analytics.aggregate([
       { $match: { url: url._id } },
       { $group: { _id: "$browser", count: { $sum: 1 } } }
     ]);
-    breakdown.byBrowser = formatData(browserData);
 
-    return success(res, breakdown);
+    return success(res, {
+      devices: formatData(deviceData),
+      locations: formatData(countryData),
+      browsers: formatData(browserData)
+    });
   } catch (err) {
     return error(res, err.message, 500);
   }

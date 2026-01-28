@@ -26,15 +26,15 @@ function randomDateWithin(days) {
 
 async function seedLarge() {
   try {
-    console.log("🌱 Connecting...");
+    console.log("Connecting...");
     await mongoose.connect(process.env.MONGO_URL, { autoIndex: true });
 
-    console.log("🧨 Clearing Existing Data...");
+    console.log("Clearing Existing Data...");
     await User.deleteMany({});
     await Url.deleteMany({});
     await Analytics.deleteMany({});
 
-    console.log("👤 Creating Primary Demo User...");
+    console.log("Creating Primary Demo User...");
     const passwordHash = await bcrypt.hash("password123", 10);
     const user = await User.create({
       name: "Demo Test User",
@@ -42,7 +42,7 @@ async function seedLarge() {
       password: passwordHash,
     });
 
-    console.log("🔗 Generating 20 URLs...");
+    console.log("Generating 20 URLs...");
     let urls = [];
     for (let i = 0; i < 20; i++) {
       const withPassword = Math.random() < 0.2; // 20% password-protected
@@ -61,9 +61,9 @@ async function seedLarge() {
     }
 
     const insertedUrls = await Url.insertMany(urls);
-    console.log(`📌 Inserted URLs: ${insertedUrls.length}`);
+    console.log(`Inserted URLs: ${insertedUrls.length}`);
 
-    console.log("📊 Creating 1000 Analytics logs...");
+    console.log("Creating 1000 Analytics logs...");
     let analyticsBatch = [];
     for (let x = 0; x < 1000; x++) {
       const u = insertedUrls[Math.floor(Math.random() * insertedUrls.length)];
@@ -87,7 +87,7 @@ async function seedLarge() {
 
     process.exit(0);
   } catch (err) {
-    console.error("❌ SEED ERROR", err);
+    console.error("SEED ERROR", err);
     process.exit(1);
   }
 }

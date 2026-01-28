@@ -42,7 +42,7 @@ exports.createShortUrl = async (req, res) => {
       password: hashedPassword
     });
 
-    const shortUrl = `${process.env.BASE_URL}/${shortId}`;
+    const shortUrl = `${process.env.BASE_URL}/${customAlias || shortId}`;
 
     return success(res, { shortUrl, url }, "Short URL created");
   } catch (err) {
@@ -76,6 +76,11 @@ exports.getUrlDetails = async (req, res) => {
 exports.deleteUrl = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (req.user.email === 'demo@mail.com') {
+      return error(res, "you can't delete with demo account.", 403);
+    }
+
     const url = await Url.findOneAndDelete({ _id: id, user: req.user.id });
     if (!url) return error(res, "URL not found", 404);
     return success(res, null, "Deleted");
