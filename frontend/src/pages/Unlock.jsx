@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Layout from '../components/Layout';
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion'
 import { Lock, Unlock as UnlockIcon, AlertCircle, Loader2 } from 'lucide-react';
 
 const Unlock = () => {

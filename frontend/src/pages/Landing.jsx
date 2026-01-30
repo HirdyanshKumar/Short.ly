@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion'
 import { Shield, BarChart3, QrCode, Zap } from 'lucide-react';
 
 const Landing = () => {
