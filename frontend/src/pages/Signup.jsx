@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion'
 import { UserPlus, Mail, Lock, User, AlertCircle, Loader2 } from 'lucide-react';
 
 const Signup = () => {
@@ -20,7 +20,6 @@ const Signup = () => {
         setLoading(true);
         try {
             await signup(username, email, password);
-            // Automatically log in after signup or redirect to login
             navigate('/login');
         } catch (err) {
             setError(err.response?.data?.message || 'Signup failed. Username or Email may be taken.');
@@ -58,7 +57,7 @@ const Signup = () => {
                                     type="text"
                                     required
                                     className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 focus:border-secondary/50 focus:ring-1 focus:ring-secondary/30 outline-none transition-all"
-                                    placeholder="john_doe"
+                                    placeholder="Mohit_Chauhan"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import { motion } from 'framer-motion';
+import {motion} from 'framer-motion'
 import { LogIn, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
 
 const Login = () => {
